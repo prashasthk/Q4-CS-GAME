@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -21,11 +23,10 @@ MouseListener, MouseMotionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	JFrame f;
 	Timer t;
 	Font font;
-	
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Driver d = new Driver();
@@ -33,17 +34,19 @@ MouseListener, MouseMotionListener {
 	
 	public Driver() {
 		f = new JFrame();
-		f.setTitle("Ultimate Chicken Horse");
+		f.setTitle("Space Race");
 		f.setExtendedState(Frame.MAXIMIZED_BOTH);
 		f.setResizable(true);
 		f.addKeyListener(this);
 		f.addMouseListener(this);
-		init();
+		init();	
 		t = new Timer(17, this);
 		t.start();
-		f.add(this);
+		f.getContentPane().setBackground(Color.black);
+		//f.add(this);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
+		
 	}
 	public void init() {
 		font = new Font("Courier New", 1, 20);
@@ -56,6 +59,8 @@ MouseListener, MouseMotionListener {
 	
 	public void paint(Graphics g) {
 		super.paintComponent(g);
+		
+
 
 	}
 	
