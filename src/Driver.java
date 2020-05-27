@@ -26,7 +26,12 @@ MouseListener, MouseMotionListener {
 	JFrame f;
 	Timer t;
 	Font font;
+
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+	Player pp1;
+	Player pp2;
+
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Driver d = new Driver();
@@ -50,6 +55,8 @@ MouseListener, MouseMotionListener {
 	}
 	public void init() {
 		font = new Font("Courier New", 1, 20);
+		pp1 = new Player(15, 50, 1);
+		pp2 = new Player(50, 30, 2);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -59,11 +66,13 @@ MouseListener, MouseMotionListener {
 	
 	public void paint(Graphics g) {
 		super.paintComponent(g);
-		
-
+		pp1.draw(g);
+		pp2.draw(g);
 
 	}
 	
+	
+
 	public void update() {
 		
 	}
@@ -132,6 +141,18 @@ MouseListener, MouseMotionListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getKeyCode() == e.VK_W) {
+			pp1.move(-1);
+		}
+		if(e.getKeyCode() == e.VK_S) {
+			pp1.move(+1);
+		}
+		if(e.getKeyCode() == e.VK_UP) {
+			pp2.move(-1);
+		}
+		if(e.getKeyCode() == e.VK_DOWN) {
+			pp2.move(+1);
+		}
 		
 	}
 
