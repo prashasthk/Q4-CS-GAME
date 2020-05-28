@@ -1,7 +1,8 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
+import java.awt.Toolkit;
 
 public class Player{
 	
@@ -9,13 +10,14 @@ public class Player{
 	private int yMove, ID;
 	public int points;
 	public Rectangle rocket;
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	public Player(int x, int y, int ID) {
 		points = 0;
 		this.x = x;
 		this.y = y;
 		this.ID = ID;
-		rocket = new Rectangle(x, y, 5, 25); //adjust height/width accordingly
+		rocket = new Rectangle(this.x, this.y, 5, 25); //adjust height/width accordingly
 	}
 	
 	/*
@@ -34,10 +36,10 @@ public class Player{
 	public void move(int ymove) {
 		rocket.y += ymove;
 		if(rocket.y <= 15) {
-			rocket.y = 250;
+			rocket.y = screenSize.height-100;
 		}
-		if(rocket.y >= 250) {
-			rocket.y = 250;
+		if(rocket.y >= screenSize.height-100) {
+			rocket.y = screenSize.height-100;
 			points++;
 		}
 	}

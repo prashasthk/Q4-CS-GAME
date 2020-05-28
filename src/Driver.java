@@ -30,7 +30,7 @@ MouseListener, MouseMotionListener {
 	JFrame f;
 	Timer t;
 	Font font;
-	boolean[] moveKeyCodes = new boolean[4];
+	boolean[] moveKeyCodes;
 
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -52,7 +52,6 @@ MouseListener, MouseMotionListener {
 		init();	
 		t = new Timer(17, this);
 		t.start();
-		//f.getContentPane().setBackground(Color.black);
 		f.add(this);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
@@ -61,8 +60,9 @@ MouseListener, MouseMotionListener {
 	}
 	public void init() {
 		font = new Font("Courier New", 1, 20);
-		pp1 = new Player(15, 50, 1);
-		pp2 = new Player(50, 30, 2);
+		pp1 = new Player(50, screenSize.height-100, 1);
+		pp2 = new Player(screenSize.width-50, screenSize.height-100, 2);
+		moveKeyCodes = new boolean[4];
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -72,6 +72,8 @@ MouseListener, MouseMotionListener {
 	
 	public void paint(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(Color.black);
+		g.fillRect(0, 0, screenSize.width, screenSize.height);
 		pp1.draw(g);
 		pp2.draw(g);
 
