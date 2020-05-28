@@ -23,9 +23,14 @@ MouseListener, MouseMotionListener {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	JFrame f;
 	Timer t;
 	Font font;
+	boolean[] moveKeyCodes = new boolean[4];
 
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -47,10 +52,11 @@ MouseListener, MouseMotionListener {
 		init();	
 		t = new Timer(17, this);
 		t.start();
-		f.getContentPane().setBackground(Color.black);
-		//f.add(this);
+		//f.getContentPane().setBackground(Color.black);
+		f.add(this);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
+		System.out.println(moveKeyCodes[0]);
 		
 	}
 	public void init() {
@@ -74,7 +80,20 @@ MouseListener, MouseMotionListener {
 	
 
 	public void update() {
-		
+	
+		if (moveKeyCodes[0]) {
+			pp1.move(-1);
+		}
+		if (moveKeyCodes[1]) {
+			pp1.move(1);
+		}
+		if (moveKeyCodes[2]) {
+			pp2.move(-1);
+		}
+		if (moveKeyCodes[3]) {
+			pp2.move(1);
+		}
+	
 	}
 	
 	 private Image getImage(String path) {
@@ -141,23 +160,35 @@ MouseListener, MouseMotionListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == e.VK_W) {
-			pp1.move(-1);
+		if(e.getKeyCode() == KeyEvent.VK_W) {
+			moveKeyCodes[0] = true;
 		}
-		if(e.getKeyCode() == e.VK_S) {
-			pp1.move(+1);
+		if(e.getKeyCode() == KeyEvent.VK_S) {
+			moveKeyCodes[1] = true;
 		}
-		if(e.getKeyCode() == e.VK_UP) {
-			pp2.move(-1);
+		if(e.getKeyCode() == KeyEvent.VK_UP) {
+			moveKeyCodes[2] = true;
 		}
-		if(e.getKeyCode() == e.VK_DOWN) {
-			pp2.move(+1);
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			moveKeyCodes[3] = true;
 		}
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_W) {
+			moveKeyCodes[0] = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_S) {
+			moveKeyCodes[1] = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_UP) {
+			moveKeyCodes[2] = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			moveKeyCodes[3] = false;
+		}
 		// TODO Auto-generated method stub
 		
 	}
