@@ -1,202 +1,164 @@
 import java.awt.Color;
+
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 
-public class Driver extends JPanel implements ActionListener, KeyListener,
-MouseListener, MouseMotionListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
-	JFrame f;
-	Timer t;
-	Font font;
-	boolean[] moveKeyCodes;
+public class Driver extends JFrame implements Runnable {
+	//boolean[] moveKeyCodes;
 
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private Image image;
+	private Graphics graphic;
+	private Thread Driver = new Thread(this);
+	private Player player1 = new Player(125, 525, 1);
+	private Player player2 = new Player(675, 525, 2);
+	private Thread p1 = new Thread(player1);
+	private Thread p2 = new Thread(player2);
+	private int gameWidth = 800;
+	private int gameHeight = 600;
+	public Dimension screenSize = new Dimension(gameWidth, gameHeight);
+	private ArrayList<Meteor> meteorList = new ArrayList<Meteor>();
 
-	Player pp1;
-	Player pp2;
-
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Driver d = new Driver();
+		
 	}
-	
+
 	public Driver() {
-		f = new JFrame();
-		f.setTitle("Space Race");
-		f.setExtendedState(Frame.MAXIMIZED_BOTH);
-		f.setResizable(true);
-		f.addKeyListener(this);
-		f.addMouseListener(this);
-		init();	
-		t = new Timer(17, this);
-		t.start();
-		f.add(this);
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		f.setVisible(true);
-		System.out.println(moveKeyCodes[0]);
+		this.setTitle("CS SpaceRace");
+		this.setSize(screenSize);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		this.setVisible(true);
+		this.setBackground(Color.BLACK);
+		this.setLocationRelativeTo(null);
+		this.addKeyListener(new AL());
+		startGame();
+		// System.out.println(moveKeyCodes[0]);
+
+	}
+	/*
+	 * public void init() { font = new Font("Courier New", 1, 20); moveKeyCodes =
+	 * new boolean[4]; }
+	 */
+
+	/*
+	 * @Override public void actionPerformed(ActionEvent e) { update(); repaint(); }
+	 */
+
+	public void startGame() {
+		int lowerBound = 50;
 		
+		Driver.start();
+//		meteors.start();
+//		p1.start();
+//		p2.start();
 	}
-	public void init() {
-		font = new Font("Courier New", 1, 20);
-		pp1 = new Player(50, screenSize.height-100, 1);
-		pp2 = new Player(screenSize.width-50, screenSize.height-100, 2);
-		moveKeyCodes = new boolean[4];
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		update();
-		repaint();
-	}
-	
+
 	public void paint(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.black);
-		g.fillRect(0, 0, screenSize.width, screenSize.height);
-		pp1.draw(g);
-		pp2.draw(g);
+		//System.out.println("Painting");
+		image = createImage(getWidth(), getHeight());
+		graphic = image.getGraphics();
+		draw(graphic);
+		g.drawImage(image, 0, 0, this);
 
 	}
-	
-	
 
-	public void update() {
-	
-		if (moveKeyCodes[0]) {
-			pp1.move(-1);
+	public void draw(Graphics g) {
+		//System.out.println("Drawing");
+		for(Meteor m : meteorList) {
+			
+			m.draw(g);
 		}
-		if (moveKeyCodes[1]) {
-			pp1.move(1);
-		}
-		if (moveKeyCodes[2]) {
-			pp2.move(-1);
-		}
-		if (moveKeyCodes[3]) {
-			pp2.move(1);
-		}
-	
-	}
-	
-	 private Image getImage(String path) {
-		 Image tempImage = null;
-		 try {
-		 URL imageURL = Driver.class.getResource(path);
-		 tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
-		 } catch (Exception e) {
-		 e.printStackTrace();
-		 }
-		 return tempImage;
-	}
+		
+		player1.draw(g);
+		player2.draw(g);
 
-	
-	
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+		g.setColor(Color.WHITE);
+		g.drawString("" , 15, 50);
+		g.drawString("" , 370, 50);
 		
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	/*
+	 * public void update() {
+	 *
+	 * if (moveKeyCodes[0]) { p1.move(-1); } if (moveKeyCodes[1]) { pp1.move(1); }
+	 * if (moveKeyCodes[2]) { pp2.move(-1); } if (moveKeyCodes[3]) { pp2.move(1); }
+	 *
+	 * }
+	 */
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	/*
+	 * @Override public void keyPressed(KeyEvent e) { // TODO Auto-generated method
+	 * stub if(e.getKeyCode() == KeyEvent.VK_W) { moveKeyCodes[0] = true; }
+	 * if(e.getKeyCode() == KeyEvent.VK_S) { moveKeyCodes[1] = true; }
+	 * if(e.getKeyCode() == KeyEvent.VK_UP) { moveKeyCodes[2] = true; }
+	 * if(e.getKeyCode() == KeyEvent.VK_DOWN) { moveKeyCodes[3] = true; }
+	 *
+	 * }
+	 */
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_W) {
-			moveKeyCodes[0] = true;
+	/*
+	 * @Override public void keyReleased(KeyEvent e) { if(e.getKeyCode() ==
+	 * KeyEvent.VK_W) { moveKeyCodes[0] = false; } if(e.getKeyCode() ==
+	 * KeyEvent.VK_S) { moveKeyCodes[1] = false; } if(e.getKeyCode() ==
+	 * KeyEvent.VK_UP) { moveKeyCodes[2] = false; } if(e.getKeyCode() ==
+	 * KeyEvent.VK_DOWN) { moveKeyCodes[3] = false; } // TODO Auto-generated method
+	 * stub
+	 *
+	 * }
+	 */
+	public class AL extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) { // when key is pressed
+			player1.keyPressed(e);
+			player2.keyPressed(e);
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S) {
-			moveKeyCodes[1] = true;
+
+		@Override
+		public void keyReleased(KeyEvent e) { // when key is released
+			player1.keyReleased(e);
+			player2.keyReleased(e);
 		}
-		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			moveKeyCodes[2] = true;
-		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			moveKeyCodes[3] = true;
-		}
-		
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_W) {
-			moveKeyCodes[0] = false;
+	public void run() {
+		try {
+			while (true) {
+				if(meteorList.size() < 30) {
+					
+					int direction = (int) (Math.random()*2);
+					System.out.println(direction);
+					meteorList.add(new Meteor(direction));
+				}
+				//System.out.println("hi");
+				for(int i = 0; i < meteorList.size(); i++) {
+					meteorList.get(i).move();
+					player1.collision(meteorList.get(i).getRectangle());
+					player2.collision(meteorList.get(i).getRectangle());
+					//System.out.println("hi");
+					if(meteorList.get(i).canRemove()) {
+						//System.out.println("removed");
+						meteorList.remove(i);
+					}
+					
+				}
+				//System.out.println(meteorList.size());
+				player1.move();
+				player2.move();
+				repaint();
+				Thread.sleep(17);
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S) {
-			moveKeyCodes[1] = false;
-		}
-		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			moveKeyCodes[2] = false;
-		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			moveKeyCodes[3] = false;
-		}
-		// TODO Auto-generated method stub
-		
 	}
 
-	
-	
-	
-	
 }
