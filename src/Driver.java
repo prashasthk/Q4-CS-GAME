@@ -1,3 +1,5 @@
+
+
 import java.awt.Color;
 
 import java.awt.Dimension;
@@ -10,13 +12,16 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 public class Driver extends JFrame implements Runnable {
-	//boolean[] moveKeyCodes;
+//boolean[] moveKeyCodes;
 
 	private Image image;
 	private Graphics graphic;
 	private Thread Driver = new Thread(this);
 	private Player player1 = new Player(125, 525, 1);
 	private Player player2 = new Player(675, 525, 2);
+	protected int p1Points;
+	protected int p2Points;
+	private boolean gameOver = false;
 	private Thread p1 = new Thread(player1);
 	private Thread p2 = new Thread(player2);
 	private int gameWidth = 800;
@@ -26,7 +31,7 @@ public class Driver extends JFrame implements Runnable {
 
 	public static void main(String[] args) {
 		Driver d = new Driver();
-		
+
 	}
 
 	public Driver() {
@@ -39,7 +44,7 @@ public class Driver extends JFrame implements Runnable {
 		this.setLocationRelativeTo(null);
 		this.addKeyListener(new AL());
 		startGame();
-		// System.out.println(moveKeyCodes[0]);
+// System.out.println(moveKeyCodes[0]);
 
 	}
 	/*
@@ -53,15 +58,15 @@ public class Driver extends JFrame implements Runnable {
 
 	public void startGame() {
 		int lowerBound = 50;
-		
+
 		Driver.start();
-//		meteors.start();
-//		p1.start();
-//		p2.start();
+// meteors.start();
+// p1.start();
+// p2.start();
 	}
 
 	public void paint(Graphics g) {
-		//System.out.println("Painting");
+//System.out.println("Painting");
 		image = createImage(getWidth(), getHeight());
 		graphic = image.getGraphics();
 		draw(graphic);
@@ -70,19 +75,27 @@ public class Driver extends JFrame implements Runnable {
 	}
 
 	public void draw(Graphics g) {
-		//System.out.println("Drawing");
-		for(Meteor m : meteorList) {
-			
+//System.out.println("Drawing");
+		for (Meteor m : meteorList) {
+
 			m.draw(g);
 		}
-		
+
 		player1.draw(g);
 		player2.draw(g);
 
 		g.setColor(Color.WHITE);
-		g.drawString("" , 15, 50);
-		g.drawString("" , 370, 50);
-		
+		g.drawString("" + this.p1Points, 25, 50);
+		g.drawString("" + this.p2Points, 750, 50);
+
+		if (p1Points == 3) {
+			g.drawString("Player 1 wins", 375, 50);
+			gameOver = true;
+		}
+		if (p2Points == 3) {
+			g.drawString("Player 2 wins", 375, 50);
+			gameOver = true;
+		}
 	}
 
 	/*
@@ -132,25 +145,43 @@ public class Driver extends JFrame implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-				if(meteorList.size() < 30) {
-					
-					int direction = (int) (Math.random()*2);
+				if (meteorList.size() < 30) {
+
+					int direction = (int) (Math.random() * 2);
 					System.out.println(direction);
 					meteorList.add(new Meteor(direction));
 				}
-				//System.out.println("hi");
-				for(int i = 0; i < meteorList.size(); i++) {
+//System.out.println("hi");
+				for (int i = 0; i < meteorList.size(); i++) {
 					meteorList.get(i).move();
-					player1.collision(meteorList.get(i).getRectangle());
-					player2.collision(meteorList.get(i).getRectangle());
-					//System.out.println("hi");
-					if(meteorList.get(i).canRemove()) {
-						//System.out.println("removed");
+					if (player1.collision(meteorList.get(i).getRectangle())) {
+						p1Points = 0;
+					}
+					if (player2.collision(meteorList.get(i).getRectangle())) {
+						p2Points = 0;
+					}
+//System.out.println("hi");
+					if (meteorList.get(i).canRemove()) {
+//System.out.println("removed");
 						meteorList.remove(i);
 					}
-					
+
 				}
-				//System.out.println(meteorList.size());
+				if (player1.rocket.y <= 15) {
+					p1Points++;
+				}
+				if (player2.rocket.y <= 15) {
+					p2Points++;
+				}
+				if (gameOver) {
+					Thread.sleep(2000);
+					p1Points = 0;
+					p2Points = 0;
+					gameOver = false;
+					player1.rocket.y = 525;
+					player2.rocket.y = 525;
+				}
+//System.out.println(meteorList.size());
 				player1.move();
 				player2.move();
 				repaint();

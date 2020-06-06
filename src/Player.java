@@ -1,3 +1,5 @@
+
+
 import java.awt.Color;
 
 import java.awt.Graphics;
@@ -16,7 +18,6 @@ public class Player implements Runnable {
 		this.ID = ID;
 		rocket = new Rectangle(x, y, 10, 30); // adjust height/width accordingly
 	}
-	
 
 	public void keyPressed(KeyEvent e) {
 		switch (ID) {
@@ -71,7 +72,7 @@ public class Player implements Runnable {
 
 	public void move() {
 		rocket.y += yMove;
-		if (rocket.y <= 15) {
+		if (rocket.y < 15) {
 			rocket.y = 525;
 		}
 		if (rocket.y >= 570) {
@@ -93,13 +94,15 @@ public class Player implements Runnable {
 			break;
 		}
 	}
-public void collision(Rectangle meteor) {
-		
+
+	public boolean collision(Rectangle meteor) {
+
 		if (meteor.intersects(rocket)) {
-			
 			rocket.y = 525;
+			return true;
 		}
-		
+		return false;
+
 	}
 
 	@Override
