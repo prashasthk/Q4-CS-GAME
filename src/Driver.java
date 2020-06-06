@@ -151,7 +151,7 @@ public class Driver extends JFrame implements Runnable {
 					System.out.println(direction);
 					meteorList.add(new Meteor(direction));
 				}
-//System.out.println("hi");
+
 				for (int i = 0; i < meteorList.size(); i++) {
 					meteorList.get(i).move();
 					if (player1.collision(meteorList.get(i).getRectangle())) {
@@ -160,9 +160,9 @@ public class Driver extends JFrame implements Runnable {
 					if (player2.collision(meteorList.get(i).getRectangle())) {
 						p2Points = 0;
 					}
-//System.out.println("hi");
+
 					if (meteorList.get(i).canRemove()) {
-//System.out.println("removed");
+
 						meteorList.remove(i);
 					}
 
